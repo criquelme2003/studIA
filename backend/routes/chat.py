@@ -7,7 +7,7 @@ from models import ChatRequest, ChatResponse
 from routes.auth import get_user_id_from_token
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/api/chat", tags=["chat"])
+router = APIRouter(prefix="/chat", tags=["chat"])
 
 GEMINI_URL = (
     "https://generativelanguage.googleapis.com/v1beta/models/"

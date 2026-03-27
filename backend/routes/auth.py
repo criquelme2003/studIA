@@ -1,10 +1,10 @@
 import logging
 from fastapi import APIRouter, HTTPException, Header
 from database import supabase
-from models import TokenPayload, UserResponse
+from models import LoginRequest, LoginResponse, TokenPayload, UserResponse
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/api/auth", tags=["auth"])
+router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 def get_user_id_from_token(authorization: str) -> str:
@@ -27,6 +27,27 @@ def get_user_id_from_token(authorization: str) -> str:
     except Exception as exc:
         logger.warning("Token validation failed: %s", exc)
         raise HTTPException(status_code=401, detail="Token validation failed")
+
+
+@router.post("/login", response_model=LoginResponse)
+async def login(payload: LoginRequest):
+    """Sign in with email and password. Returns an access token."""
+    try:
+        response = supabase.auth.sign_in_with_password(
+            {"email": payload.email, "password": payload.password}
+        )
+        if not response or not response.user or not response.session:
+            raise HTTPException(status_code=401, detail="Invalid credentials")
+        return LoginResponse(
+            access_token=response.session.access_token,
+            user_id=str(response.user.id),
+            email=response.user.email,
+        )
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.warning("Login failed for %s: %s", payload.email, exc)
+        raise HTTPException(status_code=401, detail="Invalid credentials")
 
 
 @router.post("/verify", response_model=UserResponse)

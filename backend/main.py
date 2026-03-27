@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from config import CORS_ORIGINS
-from routes import auth, notes, documents, files, chat
+from routes import auth, notes, documents, files, chat, subjects, chat_deepseek
 
 logging.basicConfig(
     level=logging.INFO,
@@ -28,10 +28,12 @@ app.add_middleware(
 )
 
 app.include_router(auth.router)
+app.include_router(subjects.router)
 app.include_router(notes.router)
 app.include_router(documents.router)
 app.include_router(files.router)
 app.include_router(chat.router)
+app.include_router(chat_deepseek.router)
 
 
 @app.get("/health", tags=["health"])

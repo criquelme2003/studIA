@@ -6,7 +6,7 @@ from models import NoteCreate, NoteResponse
 from routes.auth import get_user_id_from_token
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/api/notes", tags=["notes"])
+router = APIRouter(prefix="/notes", tags=["notes"])
 
 
 @router.get("", response_model=List[NoteResponse])

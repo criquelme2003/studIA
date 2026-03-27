@@ -6,7 +6,7 @@ from models import DocumentCreate, DocumentResponse
 from routes.auth import get_user_id_from_token
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/api/documents", tags=["documents"])
+router = APIRouter(prefix="/documents", tags=["documents"])
 
 
 @router.get("", response_model=List[DocumentResponse])
